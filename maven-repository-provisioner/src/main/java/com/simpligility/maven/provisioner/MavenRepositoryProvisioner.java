@@ -100,13 +100,14 @@ public class MavenRepositoryProvisioner
                   cacheDirectory.mkdirs();
                 }
                 ArtifactRetriever retriever = null;
-                if ( config.hasArtifactsCoordinates() ) 
+                if ( config.hasArtifactsCoordinates() )
                 {
                   logger.info( "Artifact retrieval starting." );
                   retriever = new ArtifactRetriever( cacheDirectory );
                   retriever.retrieve( config.getArtifactCoordinates(), config.getSourceUrl(), 
                       config.getIncludeSources(), config.getIncludeJavadoc(), 
-                      config.getIncludeProvidedScope(), config.getIncludeTestScope(), config.getIncludeRuntimeScope() );
+                      config.getCompileScope(), config.getIncludeProvidedScope(),
+                          config.getIncludeTestScope(), config.getIncludeRuntimeScope() );
 
                   logger.info( "Artifact retrieval completed." );
                 } 

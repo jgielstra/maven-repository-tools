@@ -48,7 +48,11 @@ public class Configuration
     @Parameter( names = { "-ij", "-includeJavadoc" },
                 description = "Flag to enable/disable download of javadoc artifacts.", arity = 1 )
     private Boolean includeJavadoc = true;
-    
+
+    @Parameter( names = { "-ic", "-includeCompileScope" },
+            description = "Flag to include/exclude provisioning of dependencies with compile scope.", arity = 1 )
+    private Boolean includeCompileScope = false;
+
     @Parameter( names = { "-ip", "-includeProvidedScope" },
                 description = "Flag to include/exclude provisioning of dependencies with provided scope.", arity = 1 )
     private Boolean includeProvidedScope = false;
@@ -192,6 +196,11 @@ public class Configuration
     public Boolean getIncludeJavadoc()
     {
         return includeJavadoc;
+    }
+
+    public Boolean getCompileScope()
+    {
+        return includeCompileScope;
     }
 
     public Boolean getIncludeProvidedScope()

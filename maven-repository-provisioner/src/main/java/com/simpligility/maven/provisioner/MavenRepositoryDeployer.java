@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeSet;
@@ -264,27 +265,35 @@ public class MavenRepositoryDeployer
         
         String artifactUrl = targetUrl + gav.getRepositoryURLPath() + gav.getPomFilename();
         logger.debug( "Headers for " +  artifactUrl );
-        HttpClient httpclient = HttpClientBuilder.create().build();
-        HttpHead httphead = new HttpHead( artifactUrl );
-        try 
+        URI uri = URI.create( artifactUrl );
+        if ( uri.getScheme().contains( "file" ) )
         {
-          HttpResponse response = httpclient.execute( httphead );
-          if ( response.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_OK )
-          {
-              alreadyInTarget = true;
-          }
-        } 
-        catch ( ClientProtocolException cpe ) 
-        {
-          cpe.printStackTrace();
-        } 
-        catch ( IOException ioe ) 
-        {
-          ioe.printStackTrace();
-        } 
-        finally 
-        {
-           httpclient.getConnectionManager().shutdown();
+            alreadyInTarget = ( new File( uri ) ).exists();
+        }
+        else
+            {
+            HttpClient httpclient = HttpClientBuilder.create().build();
+            HttpHead httphead = new HttpHead( uri );
+            try
+            {
+              HttpResponse response = httpclient.execute( httphead );
+              if ( response.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_OK )
+              {
+                  alreadyInTarget = true;
+              }
+            }
+            catch ( ClientProtocolException cpe )
+            {
+              cpe.printStackTrace();
+            }
+            catch ( IOException ioe )
+            {
+              ioe.printStackTrace();
+            }
+            finally
+            {
+               httpclient.getConnectionManager().shutdown();
+            }
         }
         return alreadyInTarget;
     }
